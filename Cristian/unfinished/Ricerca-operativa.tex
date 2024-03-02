@@ -1,0 +1,123 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[export]{adjustbox}
+\usepackage{subcaption}
+\usepackage{wrapfig}
+\usepackage[italian]{babel}
+\selectlanguage{italian}
+
+\title{PL (programmazione lineare)}
+\author{Cristian Salvi}
+\date{March 2024}
+
+\begin{document}
+
+\maketitle
+
+    Iniziamo con l'identificare un problema: un problema è un contesto in cui dobbiamo fare una decisione, ci sono decisioni accettabili ed ottimali; per ovvie ragioni noi vogliamo le soluzioni ottimali.\newline
+    Cosa caratterizza un problema?
+    \begin{enumerate}
+        \item Un obiettivo
+        \item Delle variabili
+        \item Dei valori fissi (per esempio un costo unitario)
+    \end{enumerate}
+    Nella forma generale di un problema possiamo interpretare queste cose come un sistema di disequazioni \textbf{lineari}. In queste disequazioni si definiscono dei vincoli per queste variabili, dobbiamo poi massimizzare o minimizzare la funzione che descrive il nostro obiettivo.\newline
+    definiamo $x$ come il vettore che rappresenta le variabili, e c che rappresenta il vettore dei coefficienti.
+
+    \begin{center}
+    
+    $x = \begin{pmatrix}
+        x_{1} \\
+        x_{2} \\
+        \vdots \\
+        x_{n} \\
+    \end{pmatrix}$
+    $c = \begin{pmatrix}
+        c_{1} \\
+        c_{2} \\
+        \vdots \\
+        c_{n} \\
+    \end{pmatrix}$
+    
+    \end{center}
+
+    Con $n \in \mathbb{N} \setminus \{0\}$ e $c, x \in \mathbb{R}^n$. Il nostro obiettivo sarà massimizzare (o minimizzare) la funzione $z = c^{T}x$, che non è altro se non una combinazione lineare dei termini del vettore $x$ con i coefficienti presenti nel vettore trasposto $c^T$. Osserviamo che la funzione risulterà $z = c_{1}x_{1} + c_{2}x_{2} + \dots + c_{n}x_{n}$.\newline
+    Adesso parliamo dei vincoli. È ovvio che senza nessun vincolo la funzione non avrà un massimo. Possiamo vedere i vincoli come delle condizioni di esistenza, lo facciamo preferibilmente con delle disequazioni; quando invece incontreremo delle equazioni esprimeremo una variabile in funzione delle altre, e procederemo a sostituire nelle disequazioni tale variabile. Una volta fatte le opportune trasformazioni il sistema avrà una tra queste forme.
+
+    \begin{center}
+        $Ax \ge b$
+        
+        $Ax \le b$
+    \end{center}
+    Dove $x$ è il vettore delle variabili, $A$ la matrice dei coefficienti, e $b$ il vettore dei termini noti. La convenzione vuole che la forma con il $\le$ venga utilizzata quando dobbiamo massimizzare la funzione, mentre l'altra nei problemi di minimizzazione. Questo sistema lineare di disequazioni descrive i vincoli.\newline
+    NOTA IMPORTANTE: il vettore $x$ ed il vettore trasposto $c^T$ sono i vettori "finali" in cui non dobbiamo più applicare trasformazioni di sorta. Vi starete chiedendo perché dovremmo voler applicare trasformazioni sul vettori delle variabili, ed adesso riceverete risposta.
+
+    \textbf{Le variabili libere}\newline
+    Quando ci troviamo davanti ad un modello matematico che descrive un problema (quindi una funzione da ottimizzare ed un sistema per descrivere i vincoli) vogliamo avere un vincolo particolare sulle nostre variabili, $x \ge 0$, e quando lo abbiamo le variabili vengono dette \textbf{libere}.\newline
+    E mo' che cazzo facciamo? Beh se una cosa non ci piace, la cambiamo! Creiamo un modello equivalente, e sostituiamo tutte le variabili libere con una differenza di due numeri reali positivi (i risultati si possono esprimere tutti i valori in $\mathbb{R}$ anche così). Adesso il problema è risolto, abbiamo un modello matematico equivalente al problema di partenza e con tutti i vincoli come vogliamo noi (FIGO!). L'unico motivo per cui non ho spiegato prima questo è che questo vincolo particolare può mandare la formalizzazione a puttane nel caso di un problema di massimizzazione, il resto del sistema sarebbe espresso con $\le$ mentre questa serie di vincoli con $\ge$, quindi per formalità e compattezza ho deciso di separare i concetti, sopra ho quindi assunto che ci fossero tutte le condizioni necessarie per procedere.
+
+    Abbiamo quindi definito tutto quello che ci serviva
+    \begin{itemize}
+        \item L'obiettivo è la massimizzazione o la minimizzazione della funzione obiettivo
+        \item le variabili sono nel nostro vettore $x$
+        \item I valori fissi sono i nostri coefficienti in $c$
+    \end{itemize}
+    \textbf{Interpretazione geometrica}
+    \newline
+    Ha senso fare un'interpretazione geometrica della programmazione lineare? Spoiler: sì.\newline
+    Possiamo rappresentare i nostri vincoli in un iperpiano n-dimensionale in cui ogni dimensione rappresenta una variabile. Se per esempio avessimo:
+    \begin{center}
+    $x = \begin{pmatrix}
+        x_{1} \\
+        x_{2}
+    \end{pmatrix}$
+    \end{center}
+    Con i seguenti vincoli:
+    \begin{center}
+    \begin{equation}
+    \begin{cases}
+        -x_{1}+x_{2} \le 1 \\
+        x_{1} \le 3 \\
+        x_{1} \ge 0 \\
+        x_{2} \ge 0
+    \end{cases}
+    \end{equation}
+    \end{center}
+
+    Potremmo rappresentare i vincoli su un iperpiano a due dimensioni (quindi un normale piano cartesiano) e l'insieme delle soluzioni ammissibili sarebbe quello rappresentato nella figura 1.
+    
+    \begin{figure}[t]
+        \centering
+        \includegraphics[scale=0.5]{poliedro.png}
+        \caption{Poliedro limitato}
+        
+    \end{figure}
+    Da qui si capisce perché cerchiamo di avere ogni variabile maggiore o uguale a zero, ci permette di limitare il nostro poliedro almeno da un lato, infatti i casi possibili sono tre:
+    \begin{itemize}
+        \item Ci sono troppi vincoli, l'insieme delle soluzioni ammissibili è nullo
+        \item Ci sono troppi pochi vincoli, l'insieme delle soluzioni non è limitato
+        \item L'insieme delle soluzioni è non nullo e limitato da tutti i lati (caso ideale)
+    \end{itemize}
+    Perché l'avere un insieme delle soluzioni illimitato non è una buona cosa? Se volessimo massimizzare il profitto, sarebbe bello se questo fosse illimitato, giusto? Beh, la risposta banale è che quando si ha un insieme delle soluzioni ammissibili illimitato, allora il modello matematico non è stato fatto bene, o non si sono considerati dei fattori.
+    Nella figura due potrete vedere un paio di esempi.
+    \begin{figure}[t!]
+
+    \begin{subfigure}{0.5\textwidth}
+    \includegraphics[scale=0.5]{poliedro-illimitato.png} 
+    \caption{Poliedro Illimitato}
+    
+    \end{subfigure}
+    \begin{subfigure}{0.5\textwidth}
+    \includegraphics[scale=0.5]{poliedro-nullo.png}
+    \caption{Poliedro nullo}
+    
+    \end{subfigure}
+    
+    \caption{Due esempi di poliedri non ideali}
+    \label{fig:image2}
+    \end{figure}
+    
+\end{document}
+
