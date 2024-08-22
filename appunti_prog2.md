@@ -65,3 +65,30 @@ that ensures the exception will not happen, because
 • The context of use is local.
 Otherwise, you should use a checked exception.
 
+Il professore ha parlato di livelli di astrazione, tramite la reflection, se abbiamo una exception di un certo tipo in una funzione di search per esempio, ma questa funzione è stata chiamata in un determinato contesto in cui abbiamo più informazioni, è accettabile fare un try e nella clausola catch sollevare una nuova eccezione (penso che questo convenga farlo anche per passare da un'eccezione checked ad un'unchecked)
+
+**Defensive programming**
+In questo paragrafo la Liskov parla di cosa fare quando in un metodo parziale una clausola requires non viene rispettata, in particolare, suggerisce la creazione di un'eccezione (col nome fittizio di **FailureException**) che deve rimanere unchecked. Questo solo nel caso in cui controllare la correttezza dei parametri sia semplice.
+Supponiamo di dover fare la ricerca di un elemento in un array, in un contesto in cui dovremmo essere al 100% sicuri che l'elemento sia presente in esso; se l'elemento non dovesse fare effettivamente parte della lista allora c'è stato un errore logico o di programmazione, è giusto che l'eccezione sia unchecked.
+
+**Items di Bloch sulle eccezioni**
+Il prof definisce il libro di Bloch come una lista di ingredienti di merendine (molto meno discorsivo della Liskov) ed è materiale utile per prendere un voto alto all'esame (ho bisogno di alzare la media). Quindi vi fornirò una lista ez degli item (usatela come reference mentre fate il progetto magari:
+
+- Item 69: non abusare delle eccezioni (qui va contro la Liskov perché lei dice che è accettabile usare le eccezioni per effettuare flow control, una boiata assurda).
+- Item 70: è convenzioni che le eccezioni unchecked create da noi ereditino dalla classe RuntimeException, e che la classe Error sia riservata alla JVM, detto questo, utilizzare le checked quando la situazione è recuperabile.
+
+> To summarize, throw checked exceptions for recoverable conditions and
+unchecked exceptions for programming errors. When in doubt, throw unchecked
+exceptions. Don’t define any throwables that are neither checked exceptions nor
+runtime exceptions. Provide methods on your checked exceptions to aid in
+recovery.
+
+- Item 71: quando il caso è semplice, cercare di evitare il sollevamento di eccezioni checked, a favore del ritorno di un'opzione vuota (e.g. null), se questo non dà abbastanza informazioni, solleva un'eccezione. Come detto prima, è accettabile trasformare un'eccezione checked in unchecked, anche per non intasare la API.
+- Item 72: favorire l'utilizzo delle eccezioni già definite. In breve no clutter.
+- Item 73: cambia il livello di astrazione delle eccezioni ove necessario.
+- Item 74: documenta ogni eccezione checked una per una con la clausola @throws di javadoc, non fare @throws Exception per esempio.
+- Item 75: dai più informazioni possibili nei messaggi d'errore (ma non dati critici come password o numeri di conti corrente).
+- Item76: atomicità degli errori, anche se viene sollevata un'eccezione idealmente l'oggetto che la lancia deve rimanere utilizzabile (se questa è unchecked... beh non c'è più un contesto in cui utilizzarla XD).
+- Item 77: non ignorare le eccezioni.
+
+
