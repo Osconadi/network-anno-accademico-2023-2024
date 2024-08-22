@@ -56,6 +56,7 @@ results. And you should use exceptions instead of requires clauses unless a requ
 cannot be checked or is very expensive to check.
 
 **Checked vs unchecked.**
+
 Prima di tutto specifichiamo: un'exception checked deve essere gestita o tramite **try catch** o esplicata tramite **throws** alla dichiarazione del metodo. La Liskov ci insegna che le exception unchecked dovrebbero essere destinate agli errori di programmazione (quindi in produzione non dovrebbero mai capitare, mentre una checked potrebbe essere prevista).
 
 > Sidebar 4.2 Checked versus Unchecked Exceptions
@@ -68,10 +69,12 @@ Otherwise, you should use a checked exception.
 Il professore ha parlato di livelli di astrazione, tramite la reflection, se abbiamo una exception di un certo tipo in una funzione di search per esempio, ma questa funzione è stata chiamata in un determinato contesto in cui abbiamo più informazioni, è accettabile fare un try e nella clausola catch sollevare una nuova eccezione (penso che questo convenga farlo anche per passare da un'eccezione checked ad un'unchecked)
 
 **Defensive programming**
+
 In questo paragrafo la Liskov parla di cosa fare quando in un metodo parziale una clausola requires non viene rispettata, in particolare, suggerisce la creazione di un'eccezione (col nome fittizio di **FailureException**) che deve rimanere unchecked. Questo solo nel caso in cui controllare la correttezza dei parametri sia semplice.
 Supponiamo di dover fare la ricerca di un elemento in un array, in un contesto in cui dovremmo essere al 100% sicuri che l'elemento sia presente in esso; se l'elemento non dovesse fare effettivamente parte della lista allora c'è stato un errore logico o di programmazione, è giusto che l'eccezione sia unchecked.
 
 **Items di Bloch sulle eccezioni**
+
 Il prof definisce il libro di Bloch come una lista di ingredienti di merendine (molto meno discorsivo della Liskov) ed è materiale utile per prendere un voto alto all'esame (ho bisogno di alzare la media). Quindi vi fornirò una lista ez degli item (usatela come reference mentre fate il progetto magari:
 
 - Item 69: non abusare delle eccezioni (qui va contro la Liskov perché lei dice che è accettabile usare le eccezioni per effettuare flow control, una boiata assurda).
