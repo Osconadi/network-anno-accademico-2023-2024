@@ -58,6 +58,10 @@ cannot be checked or is very expensive to check.
 **Checked vs unchecked.**
 
 Prima di tutto specifichiamo: un'exception checked deve essere gestita o tramite **try catch** o esplicata tramite **throws** alla dichiarazione del metodo. La Liskov ci insegna che le exception unchecked dovrebbero essere destinate agli errori di programmazione (quindi in produzione non dovrebbero mai capitare, mentre una checked potrebbe essere prevista).
+In breve:
+
+ 1. Un'eccezione checked è una qualsiasi eccezione che viene specificata nella documentazione (tramite clasusola @throws) o che è avvolta da un try catch
+ 2. Un'eccezione unchecked è un'eccezione imprevista, viene utilizzata solo nel caso di errori logici quindi non cerchiamo di fermarla in alcun modo.
 
 > Sidebar 4.2 Checked versus Unchecked Exceptions
 You should use an unchecked exception only if you expect that users will usually write code
@@ -93,5 +97,13 @@ recovery.
 - Item 75: dai più informazioni possibili nei messaggi d'errore (ma non dati critici come password o numeri di conti corrente).
 - Item76: atomicità degli errori, anche se viene sollevata un'eccezione idealmente l'oggetto che la lancia deve rimanere utilizzabile (se questa è unchecked... beh non c'è più un contesto in cui utilizzarla XD).
 - Item 77: non ignorare le eccezioni.
+
+Piccola nota: i numeri degli Item sono gli stessi che trovate sul libro Effective Java, quindi se avete dubbi o volete approfondire andate direttamente all'item che vi interessa.
+## Data abstraction
+Quando creiamo una nuova classe, dobbiamo specificare nella documentazione di questa una overview che la descrive, con attenzione a dettagli come la mutabilità della classe.
+Consiglio caldamente di leggere i capitoli 5.1 e 5.2 di PDJ in quanto fornisce due esempi di data abstraction (tramite la creazioni di due classi), l'unica intro tecnica che fa è parlare dell'overloading di funzioni e dei costruttori.
+
+- Overloading di funzioni: dichiarare funzioni con lo stesso nome ma parametri diversi, a compile time verrà deciso quale funzione si sta invocando ed il compilatore si comporterà di conseguenza.
+- Costruttore: quando viene creata un oggetto il costruttore è la prima funzione che viene eseguita, ha lo stesso nome della classe ed ha il compito di impostare l'oggetto per il suo utilizzo. Nel caso in cui la classe sia immutabile (tutti gli attributi hanno un valore non modificabile) tutti gli attributi devono essere impostati nel costruttore.
 
 
