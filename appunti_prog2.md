@@ -104,6 +104,117 @@ Quando creiamo una nuova classe, dobbiamo specificare nella documentazione di qu
 Consiglio caldamente di leggere i capitoli 5.1 e 5.2 di PDJ in quanto fornisce due esempi di data abstraction (tramite la creazioni di due classi), l'unica intro tecnica che fa è parlare dell'overloading di funzioni e dei costruttori.
 
 - Overloading di funzioni: dichiarare funzioni con lo stesso nome ma parametri diversi, a compile time verrà deciso quale funzione si sta invocando ed il compilatore si comporterà di conseguenza.
-- Costruttore: quando viene creata un oggetto il costruttore è la prima funzione che viene eseguita, ha lo stesso nome della classe ed ha il compito di impostare l'oggetto per il suo utilizzo. Nel caso in cui la classe sia immutabile (tutti gli attributi hanno un valore non modificabile) tutti gli attributi devono essere impostati nel costruttore.
+- Costruttori: quando viene creata un oggetto il costruttore è la prima funzione che viene eseguita, ha lo stesso nome della classe ed ha il compito di impostare l'oggetto per il suo utilizzo. Nel caso in cui la classe sia immutabile (tutti gli attributi hanno un valore non modificabile) tutti gli attributi devono essere impostati nel costruttore.
 
+**Record types**
+Sono tipi semplici, con all'interno solo degli attributi ed un costruttore, vengono usati come se fossero delle struct, non hanno nessun funzionamento particolare.
 
+> Sidebar 5.1 equals, clone, and toString
+Two objects are equals if they are behaviorally equivalent. Mutable objects are equals only if
+they are the same object; such types can inherit equals from Object. Immutable objects are
+equals if they have the same state; immutable types must implement equals themselves.
+clone should return an object that has the same state as its object. Immutable types can
+inherit clone from Object, but mutable types must implement it themselves.
+toString should return a string showing the type and current state of its object. All types
+must implement toString themselves.
+
+**Metodi implementati per tutte le classi**
+Il metodo equals è un metodo che ritorna un boolean, vero se due oggetti sono equivalenti, falso altrimenti. La Liskov ci impone di implementare questo metodo nelle classi immutabili, perché sì. C'è poi il metodo hashCode, due oggetti equivalenti dovrebbero sempre avere lo stesso hashCode
+Il metodo similar è considerato più "debole" del metodo equals, funziona come ci aspetteremmo che funzioni un'equavilenza, due oggetti sono simili se il loro stato è lo stesso.
+Il metodo clone è da implementare per gli oggetti mutabili (lo stato dell'oggetto può cambiare nel tempo), per gli oggetti immutabili invece l'implementazione di default è corretta.
+
+> If the default implementation
+is correct, you can inherit it by putting implements
+Cloneable in the class header
+
+    public class Poly implements Cloneable {
+		// as given before, plus
+		public boolean equals (Poly q) {
+			if (q == null || deg != q.deg) return false;
+			for (int i = 0; i <= deg; i++)
+				if (trms[i] != q.trms[i]) return false;
+			return true; 
+		}
+		public boolean equals (Object z) {
+			if (!(z instanceof Poly)) return false;
+			return equals((Poly) z); 
+		}
+	}
+	public class IntSet {
+		// as given before, plus
+		private IntSet (Vector v) { els = v; }
+		public Object clone ( ) {
+			return new IntSet((Vector) els.clone( )); 
+		}
+	}
+Queste sono due classi menzionate da PDJ per quanto riguarda l'implementazione di clone. La prima classe, essendo immutabile, necessita solamente dell'implementazione dell'interfaccia Cloneable, nella seconda, si deve implementare il metodo manualmente, senza implementare nessuna interfaccia.
+Nella prima classe si mostra anche una versione ottimizzata del metodo equals. 
+## Abstraction Function and Representation Invariant
+Questi a quanto pare sono argomenti **importantissimi** quindi cercherò di essere meno sloppy possibile uwu.
+
+> The abstraction function captures the designer′s intent
+in choosing a particular representation. It is the first
+thing you decide on when inventing the rep: what
+instance variables to use and how they relate to the
+abstract object they are intended to represent. The
+abstraction function simply describes this decision.
+The rep invariant is invented as you investigate how to
+implement the constructors and methods. It captures the
+common assumptions on which these implementations
+are based; in doing so, it allows you to consider the
+implementation of each operation in isolation of the
+others.
+
+Scusatemi per il block quote enorme (probabilmente questa sarà la sezione in cui lo farò di più).
+Essenzialmente, AF ed RI giustificano il modo in cui funziona il codice che hai scritto, si possono implementare come metodi e come commenti.
+
+AF mappa lo stato concreto di un oggetto alla sua rappresentazione astratta, nel caso di IntSet per esempio 
+`[7,3]->{3,7}`
+Dove {3,7} è proprio l'insieme dei numeri 3 e 7.
+AF è molto utile per far capire il modo inteso per l'implementazione della classe.
+Nel libro è menzionata la notazione `{x | p(x)}` presa dalla teoria degli insiemi, questa rappresenta l'insieme di tutti gli x che soddisfano il predicato p. Nel libro fa anche vedere come usare questa notazione, per esempio: 
+`AF(c) = { c.els[i].intValue | 0 <= i < c.els.size }`
+Dove c è un oggetto di tipo IntSet.
+
+	   // A typical Poly is c0 + c1x +c2x^2 + · · ·
+	// The abstraction function is
+	// AF(c) = c0 + c1x + c2x^2 + · · ·
+	// where
+	// c_i  = c.trms[i] if 0 <= i < c.trms.size
+	// 		= 0 otherwise
+E questa è l'AF di una classe che descrive polinomi.
+Nota: l'AF non deve essere scritta per i tipi record, che non applicano nessun tipo di astrazione.
+
+RI invece è sostanzialmente un insieme di condizioni che se verificate rendono "sano" l'oggetto, ogni volta che cambia lo stato di un oggetto dobbiamo assicurarci che il RI non sia stato intaccato. Nel caso di IntSet sappiamo che gli insiemi non ammettono duplicati, quindi un eventuale RI potrebbe essere
+
+    // The rep invariant is:
+	// c.els ≠ null &&
+	// for all integers i. c.els[i] is an Integer &&
+	// for all integers i , j. (0 <= i < j < c.els.size ⇒
+	// 		c.els[i].intValue ≠ c.els[j].intValue )
+Carrellata di notazioni:
+
+> && will be used for conjunction: p && q is true if p is true
+and q is true
+
+>|| will be used for disjunction: p || q is true if either p is
+true or q is true
+
+>⇒ will be used for implication: p ⇒ q means that if p is
+true, then q is also true. Note that false ⇒ anything, i.e., if
+p is false, then we can deduce whatever we like.
+
+>iff (if and only if) will be used for double implication: p iff
+q means that p ⇒ q and q ⇒ p
+
+>for all x in s . p(x) means that predicate p(x) is true for all
+x in set s.
+
+>there exists x in s . p(x) means that there is at least one x
+in set s for which the predicate p(x) is true
+
+Quando tutti gli stati possibili di un oggetto sono considerati legali, allora si scrive semplicemente `the rep invariant is true`. Un esempio pratico di questa cosa sono i record.
+
+**Ok, ma ora come cazzo implementiamo?**
+Prima ho menzionato la dichiarazione di metodi per implementare AF e RI, la questione inizialmente è molto semplice, per AF basta implementare il metodo toString, e per RI non serve altro che creare un metodo chiamata `repOk` che restituisca `true` se la struttura dell'oggetto è intatta, `false` altrimenti.
+`toString` è ovviamente un metodo pubblico, lo è anche `repOk`, per il semplice fatto che se una classe `A` dovesse avere un'altra classe `B` come attributo, dobbiamo essere in grado di chiamare il metodo `repOk` della classe `B`.
