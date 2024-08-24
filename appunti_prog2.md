@@ -216,5 +216,6 @@ in set s for which the predicate p(x) is true
 Quando tutti gli stati possibili di un oggetto sono considerati legali, allora si scrive semplicemente `the rep invariant is true`. Un esempio pratico di questa cosa sono i record.
 
 **Ok, ma ora come cazzo implementiamo?**
+
 Prima ho menzionato la dichiarazione di metodi per implementare AF e RI, la questione inizialmente è molto semplice, per AF basta implementare il metodo toString, e per RI non serve altro che creare un metodo chiamata `repOk` che restituisca `true` se la struttura dell'oggetto è intatta, `false` altrimenti.
 `toString` è ovviamente un metodo pubblico, lo è anche `repOk`, per il semplice fatto che se una classe `A` dovesse avere un'altra classe `B` come attributo, dobbiamo essere in grado di chiamare il metodo `repOk` della classe `B`.
