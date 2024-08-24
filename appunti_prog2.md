@@ -216,6 +216,65 @@ in set s for which the predicate p(x) is true
 Quando tutti gli stati possibili di un oggetto sono considerati legali, allora si scrive semplicemente `the rep invariant is true`. Un esempio pratico di questa cosa sono i record.
 
 **Ok, ma ora come cazzo implementiamo?**
-
 Prima ho menzionato la dichiarazione di metodi per implementare AF e RI, la questione inizialmente è molto semplice, per AF basta implementare il metodo toString, e per RI non serve altro che creare un metodo chiamata `repOk` che restituisca `true` se la struttura dell'oggetto è intatta, `false` altrimenti.
 `toString` è ovviamente un metodo pubblico, lo è anche `repOk`, per il semplice fatto che se una classe `A` dovesse avere un'altra classe `B` come attributo, dobbiamo essere in grado di chiamare il metodo `repOk` della classe `B`.
+I software di testing potrebbero chiamare il metodo repOk per verificare l'integrità dei nostri oggetti, quello che noi dobbiamo fare è chiamarlo nel costruttore una volta che tutto è impostato a dovere, e chiamarlo dopo aver modificato lo stato dell'oggetto (solamente quando l'operazione è conclusa però). Se `repOk` restituisce `false` possiamo lanciare una `FailureException`
+
+> Sidebar 5.2 Abstraction Function and Rep Invariant
+The abstraction function explains the interpretation of the rep. It maps the state of each legal
+representation object to the abstract object it is intended to represent. It is implemented by the
+toString method.
+The representation invariant defines all the common assumptions that underlie the
+implementations of a type’s operations. It defines which representations are legal by mapping
+each representation object to either true (if its rep is legal) or false (if its rep is not legal). It is
+implemented by the repOk method.
+
+Nota: In PDJ viene detto che la classe `Poly` è una classe immutabile ma con un "mutable rep", non capivo cosa volesse dire, ma poi mi son reso conto: array e vettori possono essere modificati. Quando in una classe abbiamo un attributo di tipo `Vector` o `List` o simili, come attributo noi abbiamo semplicemente un puntatore alla nostra lista o vettore. Anche utilizzando la keyword `final`, è possibile modificare una lista (anche un semplice array in realtà). La Liskov ci dice che non è un problema, fin tanto che questo attributo sia invisibile dall'esterno.
+
+**Esporre il rep**
+
+Esporre il rep significa lasciare che dall'esterno possa essere modificato lo stato dell'oggetto, è considerato un errore di implementazione. Bisogna fare attenzione se si ritorna direttamente un attributo dell'oggetto, perché se questo fosse un oggetto mutabile, c'è il rischio che il rep venga esposto.
+Occhio a dimostrare che ogni metodo preserva il RI.
+
+## Design
+
+**Mutabilità**
+
+la regola generale è che un oggetto che rappresenta il mondo reale dovrebbe essere mutabile (pensate ad esempio ad una macchina che deve cambiare velocità) mentre certi costrutti matematici è meglio che siano immutabili (come i polinomi, o i numeri complessi). A volte potrebbe essere necessario accettare il trade off, visto che per un oggetto immutabile si possono consumare tante risorse quando basterebbe modificare un attributo.
+
+**Categorie di metodi**
+
+Si possono dividere i metodi in diverse categorie:
+
+ 1. Creatori
+ 2. Produttori
+ 3. Mutatori
+ 4. Osservatori
+
+La modalità di utilizzo è abbastanza chiara per ogni categoria (spero). Faccio notare che i produttori sono l'equivalente immutabile dei mutatori, per esempio:
+
+    String a = "Hello";
+    String b = " World";
+    String greet = a + b;
+In questo pezzo di codice, la somma di due stringhe restituisce una nuova stringa, nessuna viene modificata. Si potrebbe rendere immutabile IntSet facendo in modo che aggiungendo un numero all'insieme venga ritornato un nuovo insieme con questo aggiunto, ma costerebbe troppo in prestazioni, se è un processo da fare di frequente.
+
+**Adeguatezza**
+
+Non è una definizione formale. Una classe è adeguata quando un utente esterno può farne utilizzo in maniera semplice ed efficiente, la regola generale menzionata su PDJ è che ogni classe deve avere almeno tre delle categorie di metodi menzionate sopra, fa anche l'esempio di IntSet, di quanto sarebbe inutile se non ci fosse un osservatore. È ovvio che magari avere sia mutatori che produttori potrebbe risultare inutile, quindi magari non prendiamo questa regola alla lettera.
+La classe deve essere completamente popolata, vale a dire che tramite i metodi presenti deve essere garantita la possibilità di creare tutti gli oggetti possibili, esempio di una classe **non** completamente popolata:
+
+    public class Rational {
+	    private int denominator, numerator;
+	    public Rational(int d, int n) {
+		    this.denominator = Math.abs(d);
+		    this.numerator = Math.abs(n);
+	    }
+    }
+Questa classe non è completamente popolata perché l'unico metodo che c'è non ci consente di rappresentare i razionali negativi. A meno che questo non fosse inteso, è considerato un errore.
+
+> Sidebar 5.6 Locality and Modifiability for Data Abstraction
+A data abstraction implementation provides locality if using code cannot modify components of
+the rep; that is, it must not expose the rep.
+A data abstraction implementation provides modifiability if, in addition, there is no way for using
+code to access any part of the rep.
+
