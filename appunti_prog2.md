@@ -278,3 +278,182 @@ the rep; that is, it must not expose the rep.
 A data abstraction implementation provides modifiability if, in addition, there is no way for using
 code to access any part of the rep.
 
+## Items di EJ per l'astrazione dei dati
+Nelle lezioni sull'astrazione di dati ci sono (naturalmente) inclusi alcuni item dal libro di Block (Effective Java), come al solito il numero degli item sarà lo stesso utilizzato nel libro in modo tale da facilitare il processo di "lookup" nel caso in cui questa cache non contenesse tutte le informazioni che vi servono.
+
+**Item 1: considerare l'utilizzo di metodi statici per la costruzione**
+
+Ora, l'item di per sé è abbastanza auto esplicativo... ma perché? La risposta è tanto semplice quanto ragionevole, i metodi statici (sorpresa sorpresa) hanno un nome! Questo può aiutare i programmatori a distinguere lo scopo di un particolare costruttore rispetto ad un altro. Nel libro come esempio cita la classe BigInt, che ha un costruttore che ritorna un oggetto che probabilmente rappresenterà un numero primo.
+I vantaggi descritti si possono riassumere in questa lista:
+
+ 1. Hanno un nome
+ 2. Non sono obbligati a creare un oggetto
+ 3. Possono ritornare un sottotipo della classe di cui fa parte il metodo
+ 4. Il tipo che stai ritornando può essere indefinito al momento della scrittura del metodo
+
+Il libro aggiunge due svantaggi:
+
+ 1. Le classi senza costruttori in senso stretto non possono ereditare altre classi (i costruttori devono essere almeno protetti)
+ 2. Non saltano all'occhio nella documentazione
+
+Per limitare i danni del secondo svantaggio il libro consiglia una carrellata di nomi per i nostri costruttori statici che sono quasi uno standard.
+
+**Item 2: usare i builder se ci sono troppi parametri da impostare**
+
+Devo ammetterlo, non mi aspettavo che ci fosse una soluzione a questo problema, la classe ha tanti attributi e tutti devono essere impostati buona fortuna, davvero. Cercare di rimediare può essere talvolta pericoloso per il RI, un approccio particolarmente problematico è quello del JavaBean, dove l'oggetto è mutabile, il costruttore mette dei valori di default per tutti gli attributi, e poi il programmatore sistema tutto manualmente con dei metodi setter. Spero caldamente che anche voi notate che i problemi di questo approccio non si contano sulle dita della mano di un mutante a Chernobyl.
+La soluzione è una cosuccia chiamata **Builder pattern**, che consiste nel creare una classe innestata, con tutti gli attributi che presenta anche la nostra classe principale e dei setter. In fine, un metodo build che chiama il costruttore della nostra classe.
+
+    public class A {
+	    private int a,b,c;
+	    private final int r1,r2;
+	    public static class Builder {
+		    private int a,b,c;
+		    private int required1, required2;
+		    
+		    public Builder(int r1, int r2){
+			    this.required1 = r1;
+			    this.required2 = r2;
+		    }
+		    public Builder setA(int arg) {
+			    this.a = arg;
+			    return this;
+			}
+			public Builder setB(int arg) {
+			    this.b = arg;
+			    return this;
+			}
+			public Builder setC(int arg) {
+			    this.c = arg;
+			    return this;
+			}
+			public A build() {
+				return new A(this);
+			}
+	    }
+	    private A(Builder b) {
+		    this.a = b.a;
+		    this.b = b.b;
+		    this.c = b.c;
+		    this.r1 = b.required1;
+		    this.r2 = b.required2;
+	    }
+    }
+In questo modo non si devono dichiarare troppi costruttori, ed allo stesso tempo non rischiamo di stravolgere il RI. Notare inoltre come gli attributi strettamente necessari sono richiesti per la costruzione di Builder. La creazione di un nuovo oggetto di tipo A avverrà così:
+`A oggetto = (new A.Builder(1,2)).setA(5).build();`
+Notare che la classe Builder deve essere dichiarata come statica, normalmente questo vorrebbe dire che tutti gli attributi ed i metodi sono statici; ma essendo questa una inner class vuol dire che la creazione di un oggetto di tipo `Builder` è indipendente dalla creazione di un oggetto di tipo `A`
+
+**Item 4: forzare la non istanziabilità con i costruttori privati**
+
+Se si volesse creare una classe che non può essere istanziata Bloch ci dice che la soluzione migliore è creare un costruttore vuoto privato, in questo modo la classe non potrà essere ereditata in nessun modo, e di dichiarare tutti i metodi come statici. 
+
+**Item 10: occhio alle regole quando dichiari il metodo equals**
+
+Non sempre vale la pena di sovrascrivere il metodo equals, bisogna farlo solo quando serve una logica di equivalenza, un esempio per cui è sempre utile sono le classi che rappresentano un solo valore, come le stringhe. Un altro esempio che aggiungo io sarebbe una classe che rappresenta un numero complesso:
+
+    public class Complex {
+	    public final int real, imaginary;
+	    public Complex(int r, int i) {
+		    real = r;
+		    imaginary = i;
+	    }
+	    public bool equals(Complex c) {
+		    return this.real == c.real && this.imaginary == c.imaginary;
+	    }
+    }
+Bisogna essere cauti quando si sovrascrive questo metodo, ricordandosi che bisogna sempre rappresentare una relazione di equivalenza.
+
+**Item 11: sempre sovrascrivere il metodo hashCode se si sovrascrive equals**
+
+Già detto, ma qui fa vedere come si fa tipicamente:
+
+    // Typical hashCode method
+	@Override 
+	public int hashCode() {
+		int result = Short.hashCode(areaCode);
+		result = 31 * result + Short.hashCode(prefix);
+		result = 31 * result + Short.hashCode(lineNum);
+		return result;
+	}
+
+Direi di fare questo per tutti gli attributi rilevanti nel metodo equals.
+In alternativa c'è un one-liner meno performante:
+
+    // One-line hashCode method - mediocre performance
+	@Override public int hashCode() {
+		return Objects.hash(lineNum, prefix, areaCode);
+	}
+
+**Item 12: sovrascrivere sempre il metodo toString**
+
+Il perché è banale, ci serve per implementare AF.
+
+**Item 49: controllare sempre la validità dei parametri**
+
+Piuttosto che aspettare che il programma sbagli controllare se i parametri sono validi, lanciare la dovuta eccezione nel caso in cui non lo siano. È possibile documentare certe eccezioni per tutta la classe (NullPointerException, stiamo guardando proprio te)
+
+**Item 50: fare copie quando ce n'è bisogno**
+
+Ricordiamoci che gli oggetti sono solo puntatori, bisogna fare attenzione a non esporre involontariamente il RI, per esempio ritornando uno degli attributi della classe. FATE LE COPIE DEGLI ATTRIBUTI SE PROPRIO VOLETE USARLE DA QUALCHE PARTE.
+
+    // Attack the internals of a Period instance
+	Date start = new Date();
+	Date end = new Date();
+	Period p = new Period(start, end);
+	end.setYear(78); // Modifies internals of p!
+Questo è un errore che non dipende dal creatore della classe period, ma si può risolvere modificando il costruttore di Period in questo modo:
+
+    // Repaired constructor - makes defensive copies of parameters
+	public Period(Date start, Date end) {
+		this.start = new Date(start.getTime());
+		this.end = new Date(end.getTime());
+		if (this.start.compareTo(this.end) > 0)
+			throw new IllegalArgumentException(this.start + " after " + this.end);
+	}
+Notare che il check viene fatto _dopo_ aver fatto le copie, questo per evitare un particolare tipo di vulnerabilità chiamato **race condition**, in cui un potenziale attaccante avrebbe cercato un modo per modificare la data dopo aver fatto il check, ma prima della copiatura.
+
+**Item 52: usare l'overloading con parsimonia**
+
+Qui c'è poco da dire, bisogna sempre ricordarsi che l'overloading degli operatori (da non confondersi con l'overriding) viene deciso a compile time, per esempio:
+
+    // Broken! - What does this program print?
+	public class CollectionClassifier {
+		public static String classify(Set<?> s) {
+			return "Set";
+		}
+		public static String classify(List<?> lst) {
+			return "List";
+		}
+		public static String classify(Collection<?> c) {
+			return "Unknown Collection";
+		}
+		public static void main(String[] args) {
+			Collection<?>[] collections = {
+				new HashSet<String>(),
+				new ArrayList<BigInteger>(),
+				new HashMap<String, String>().values()
+			};
+			for (Collection<?> c : collections)
+				System.out.println(classify(c));
+		}
+	}
+Questo codice stampa per tre volte "Unknown Collection" Quando ci aspetteremmo "Set", "List" ed infine "Unknown Collection". Ricordiamoci che java è fortemente tipato.
+Il discorso è diverso quando si fa uso di overriding, in questo caso il metodo viene scelto a runtime, questo perché ogni oggetto ha un vettore che punta ai vari metodi, ed a seconda della classe che stai istanziando questi puntatori cambiano a prescindere dal tipo di valore con cui dichiari la variabile. Esempio:
+
+    class Wine {
+		String name() { return "wine"; }
+	}
+	class SparklingWine extends Wine {
+		@Override String name() { return "sparkling wine"; }
+	}
+	class Champagne extends SparklingWine {
+		@Override String name() { return "champagne"; }
+	}
+	public class Overriding {
+		public static void main(String[] args) {
+			List<Wine> wineList = List.of(
+			new Wine(), new SparklingWine(), new Champagne());
+			for (Wine wine : wineList)
+				System.out.println(wine.name());
+		}
+	}
+In questo caso viene stampato esattamente quello che ci aspettiamo che venga stampato: "wine", "sparkling wine", "champagne".
