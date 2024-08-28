@@ -457,3 +457,57 @@ Il discorso è diverso quando si fa uso di overriding, in questo caso il metodo 
 		}
 	}
 In questo caso viene stampato esattamente quello che ci aspettiamo che venga stampato: "wine", "sparkling wine", "champagne".
+
+## Astrazione iterazione
+Porco Dio sono due lezioni ma ci ho messo un botto.
+Spiegaloce velazione: esiste un modo figo figo per scrivere i cicli for.
+
+    List<Integer> numbers = List.of(1,2,3,4,5);
+    for(Integer number : numbers) {
+	    System.out.println(number);
+    }
+Va' che figata neh? Ma posso farlo solo per le liste? NO! Ci basta un oggetto di tipo `Iterator<T>`. Cos'è? In realtà è un'interfaccia in cui sono presenti due metodi fondamentali.
+
+ 1. `hasNext` che non prende nessun argomento, e ritorna un boolean.
+ 2. `next` anche questo non ha nessun parametro, restituisce il prossimo elemento nell'iterazione, che sarà di tipo `T`.
+
+Ma come lo usiamo? faccio vedere un'implementazione veloce:
+
+    class NumberIterator implements Iterator<Integer> {
+	    private int current = 0;
+	    private List<Integer> li;
+	    
+	    public NumberIterator(List<Integer> li) {
+		    this.li = li;
+	    }
+	    
+	    public Integer next() {
+		    if (!hasNext()) throw new NoSuchElementException();
+		    return li.get(current++);
+	    }
+	    
+	    public bool hasNext() {
+		    return current < li.size();
+	    }
+    }
+Ma così non si può utilizzare il for esattamente come prima, si potrebbe fare però
+
+    Iterator<Integer> it = new NumberIterator(List.of(1,2,3,4,5));
+    while (it.hasNext()) System.out.println(it.next());
+che non è scomodissimo di per sè... ma si può fare di meglio.
+Se noi abbiamo una classe, e vogliamo che sia possibile eseguire un for direttamente su un oggetto di questa classe, c'è un'interfaccia che fa al caso nostro: `Iterable<T>`.
+Per implementare questa interfaccia basta un metodo chiamato `iterator` che restituisca un oggetto di tipo `Iterator<T>`, mostro subito la maniera che il prof definisce più elegante, che fa utilizzo del meccanismo di classe anonima:
+
+    public Iterator<Integer> iterator() {
+	    return new Iterator<Integer>() {
+		    private int idx = 0;
+		    public bool hasNext() {
+			    return idx < numbers.size();
+		    }
+		    public Integer next() {
+			    if (!hasNext()) throw new NoSuchElementException();
+			    return numbers.get(idx++);
+		    }
+	    };
+    }
+In questo modo la classe non ha un nome vero e proprio, e si possono utilizzare direttamente gli attributi dell'oggetto di cui fa parte il metodo `iterator`.
