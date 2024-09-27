@@ -1,0 +1,1 @@
+Il Database management system è un insieme di programmi che permettono agli utenti di creare e mantenere una base di dati. Facilita il processo di definire, costruire manipolare e condividere basi di dati.

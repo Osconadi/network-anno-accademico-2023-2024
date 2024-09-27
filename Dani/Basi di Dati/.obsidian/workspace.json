@@ -1,0 +1,174 @@
+{
+  "main": {
+    "id": "fef7582d098d2c73",
+    "type": "split",
+    "children": [
+      {
+        "id": "f2faadc35f273eaa",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "0e23511a045ae4ff",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "SQL.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "f4193542dae88b00",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Sicurezza di un dbms.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "894e1ab2653cdd4a",
+    "type": "split",
+    "children": [
+      {
+        "id": "53e64867be8679d2",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b3a7fce2a6045ce6",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "53370dfdae6d93d2",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "3dcc586edfa0a254",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "60a3194eea1cb265",
+    "type": "split",
+    "children": [
+      {
+        "id": "79d1d9b4231c6e07",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "ff252375a805d180",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Sicurezza di un dbms.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "ecae2e483ad6decd",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Sicurezza di un dbms.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "957293dfbde9bf35",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "326e96264ba89328",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Sicurezza di un dbms.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "f4193542dae88b00",
+  "lastOpenFiles": [
+    "SQL.md",
+    "Sicurezza di un dbms.md",
+    "DML.md",
+    "DBMS - alternative.md",
+    "Il concetto di basi di dati.md",
+    "Record.md",
+    "DBMS.md",
+    "I domini degli attributi.md",
+    "Welcome.md"
+  ]
+}
