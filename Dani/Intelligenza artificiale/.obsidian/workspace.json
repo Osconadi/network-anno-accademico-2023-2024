@@ -1,0 +1,190 @@
+{
+  "main": {
+    "id": "d64df914e390ddce",
+    "type": "split",
+    "children": [
+      {
+        "id": "510bc93dc5cf7654",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1cab39084670fdf3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Syllabus.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "2e2b05f77d379b41",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Materiale di studio.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "ec0cb57cfee4bda6",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Introduzione.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "3d1180627142d60e",
+    "type": "split",
+    "children": [
+      {
+        "id": "f91cc893ee6fda01",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d56ca920c7e4a98c",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "f7c42a8a22333417",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "8a34a5dd15d4e9b4",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "fe06cbd5cea04624",
+    "type": "split",
+    "children": [
+      {
+        "id": "2d958c837252a13a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "acee9f974d427691",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Introduzione.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "be80e4e3fd733e3d",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Introduzione.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "dcc4fe7737cd6079",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "edb9fe91ce93a94a",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Introduzione.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "ec0cb57cfee4bda6",
+  "lastOpenFiles": [
+    "Materiale di studio.md",
+    "Introduzione.md",
+    "Syllabus.md",
+    "Materiale/slide 2023/07-F1X67-ML.pdf",
+    "Materiale/slide 2023/07-F1X67-ML.pdf.opdownload",
+    "Materiale/slide 2023/2024-Samuel_Yanes_DeepRL.pdf",
+    "Materiale/slide 2023/2024-Samuel_Yanes_DeepRL.pdf.opdownload",
+    "Materiale/slide 2023/06b-F1X67-RL-Active.pdf",
+    "Materiale/slide 2023/06b-F1X67-RL-Active.pdf.opdownload",
+    "Materiale/slide 2023/06a-F1X67-RL-Intro-Passive.pdf",
+    "Materiale/slide 2023/06a-F1X67-RL-Intro-Passive.pdf.opdownload",
+    "Materiale/slide 2023/05b-F1X67-MDP-Algoritmi.pdf",
+    "Materiale/slide 2023/05b-F1X67-MDP-Algoritmi.pdf.opdownload"
+  ]
+}
