@@ -48,3 +48,5 @@ Approccio bottom-up : Apprendimento (esempio del trovare le facce in una immagin
 
 Approccio top-down: inferenza (esempio della mappa di google maos)
 Costruzione del modello > utilizzo del modello
+
+Nel [[Intro agli agenti autonomi]] ci sarano le caratteristiche dell'ambiente e degli agenti su cui opereremo.

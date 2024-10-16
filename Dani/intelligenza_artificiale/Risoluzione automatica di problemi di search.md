@@ -1,3 +1,4 @@
+#fattibilità #search #ricerca
 ### Il search 
 I problemi di **search** sono tendenzialmente caratterizzati da essere risolvibili tramite delle inferenze, un algoritmo per intenderci.
 Qui non intendiamo strettamente "ricerca" ma quanto più il "cercare" un dato oggetto in un set di oggetti. (un problema di lingua che non esprime bene il concetto di **search**)
@@ -57,3 +58,14 @@ Concediamo la possibilità di backtracking.
 
 Complessità spaziale O(d)
 Complessità temporale O(b^d) (esponenziale in base a d, profondità massima di una soluzione e b numero massimo di azioni disponibili in uno stato.)
+
+#### Breadth first Search
+Il duale della BFS, cambiano quale nodo espandere. Nella ricerca in ampiezza (breadth = ampiezza) espande il nodo più in alto nell'albero non ancora esplorato.
+
+Complessità spaziale O(b^d)
+Complessità temporale O(b^q)
+
+##### Migliorare gli algoritmi togliendo i nodi ridondanti
+Spesso negli alberi prodotti avremmo delle ridondanze di nodi. Per ottimizzare ci servirà una struttura dati aggiuntiva che ogni qualvolta si genera un nodo, ci memorizziamo quale **STATO** rappresenti (ricorda: i nodi rappresentano lo stato e il parent del nodo) e evitiamo di visitare nodi che abbiamo già trovato quelli stati. Facciamo di fatto dei tagli ai rami ridondanti che in gergo chiamiamo "**pruning**".
+
+### Situazione particolare di un grafo lineare infinito
